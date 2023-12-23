@@ -405,6 +405,38 @@ class LcdMenu {
      * When edit mode is enabled, this action is skipped
      */
     void up() {
+
+        //Edit JGS - If I'm editing a Progress item, then up arrow should increment the value. This is more intuitive then using right arrow. 
+        //
+        MenuItem* item = currentMenuTable[cursorPosition];
+        //
+        // get the type of the currently displayed menu
+        //
+        switch (item->getType()) {
+
+        #ifdef ItemList_H
+            case MENU_ITEM_LIST: {
+                if (isInEditMode()) {
+                    item->setItemIndex((item->getItemIndex() + 1) %
+                                    item->getItemCount());
+                    // constrain(item->itemIndex + 1, 0, item->itemCount - 1);
+                    update();
+                }
+                break;
+            }
+        #endif
+
+        #ifdef ItemProgress_H
+            case MENU_ITEM_PROGRESS: {
+                if (isInEditMode()) {
+                    item->increment();
+                    update();
+                }
+                break;
+            }
+        #endif
+        }
+
         //
         // determine if cursor ia at start of menu items
         //
@@ -427,6 +459,39 @@ class LcdMenu {
      * When edit mode is enabled, this action is skipped
      */
     void down() {
+
+        //Edit JGS - If I'm editing a Progress item, then up arrow should increment the value. This is more intuitive then using right arrow. 
+        //
+        MenuItem* item = currentMenuTable[cursorPosition];
+        //
+        // get the type of the currently displayed menu
+        //
+        switch (item->getType()) {
+
+        #ifdef ItemList_H
+            case MENU_ITEM_LIST: {
+                if (isInEditMode()) {
+                    item->setItemIndex((item->getItemIndex() + 1) %
+                                    item->getItemCount());
+                    // constrain(item->itemIndex + 1, 0, item->itemCount - 1);
+                    update();
+                }
+                break;
+            }
+        #endif
+
+        #ifdef ItemProgress_H
+                    case MENU_ITEM_PROGRESS: {
+                    if (isInEditMode()) {
+                        item->decrement();
+                        update();
+                    }
+                }
+                        break;
+            }
+        #endif
+
+
         //
         // determine if cursor has passed the end
         //
@@ -598,13 +663,15 @@ class LcdMenu {
         uint8_t previousIndex = item->getItemIndex();
 #endif
         switch (item->getType()) {
-#ifdef ItemList_H
-            case MENU_ITEM_LIST: {
-                item->setItemIndex(item->getItemIndex() - 1);
-                if (previousIndex != item->getItemIndex()) update();
-                break;
-            }
-#endif
+
+// Edit - JGS - If I'm editing a progress item, then down arrow should decrement the value. This is more intuitive then using left arrow.    
+// #ifdef ItemList_H
+//             case MENU_ITEM_LIST: {
+//                 item->setItemIndex(item->getItemIndex() - 1);
+//                 if (previousIndex != item->getItemIndex()) update();
+//                 break;
+//             }
+// #endif
 #ifdef ItemInput_H
             case MENU_ITEM_INPUT: {
                 blinkerPosition--;
@@ -612,14 +679,16 @@ class LcdMenu {
                 break;
             }
 #endif
-#ifdef ItemProgress_H
-            case MENU_ITEM_PROGRESS: {
-                if (isInEditMode()) {
-                    item->decrement();
-                    update();
-                }
-            }
-#endif
+
+// Edit - JGS - If I'm editing a progress item, then down arrow should decrement the value. This is more intuitive then using left arrow.
+// #ifdef ItemProgress_H
+//             case MENU_ITEM_PROGRESS: {
+//                 if (isInEditMode()) {
+//                     item->decrement();
+//                     update();
+//                 }
+//             }
+// #endif
         }
     }
     /**
@@ -640,15 +709,18 @@ class LcdMenu {
         // get the type of the currently displayed menu
         //
         switch (item->getType()) {
-#ifdef ItemList_H
-            case MENU_ITEM_LIST: {
-                item->setItemIndex((item->getItemIndex() + 1) %
-                                   item->getItemCount());
-                // constrain(item->itemIndex + 1, 0, item->itemCount - 1);
-                update();
-                break;
-            }
-#endif
+
+// Edit - JGS - If I'm editing a progress item, then up arrow should increment the value. This is more intuitive then using right arrow.
+// #ifdef ItemList_H
+//             case MENU_ITEM_LIST: {
+//                 item->setItemIndex((item->getItemIndex() + 1) %
+//                                    item->getItemCount());
+//                 // constrain(item->itemIndex + 1, 0, item->itemCount - 1);
+//                 update();
+//                 break;
+//             }
+// #endif
+
 #ifdef ItemInput_H
             case MENU_ITEM_INPUT: {
                 blinkerPosition++;
@@ -656,15 +728,17 @@ class LcdMenu {
                 break;
             }
 #endif
-#ifdef ItemProgress_H
-            case MENU_ITEM_PROGRESS: {
-                if (isInEditMode()) {
-                    item->increment();
-                    update();
-                }
-                break;
-            }
-#endif
+
+// Edit - JGS - If I'm editing a progress item, then up arrow should increment the value. This is more intuitive then using right arrow.
+// #ifdef ItemProgress_H
+//             case MENU_ITEM_PROGRESS: {
+//                 if (isInEditMode()) {
+//                     item->increment();
+//                     update();
+//                 }
+//                 break;
+//             }
+// #endif
         }
     }
 #ifdef ItemInput_H
