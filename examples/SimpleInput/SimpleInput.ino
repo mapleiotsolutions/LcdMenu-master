@@ -1,0 +1,70 @@
+/*
+ Simple Input
+
+ https://lcdmenu.forntoh.dev/examples/simple-input
+
+*/
+
+#include <ItemInput.h>
+#include <LcdMenu.h>
+
+#define LCD_ROWS 2
+#define LCD_COLS 16
+
+// Configure keyboard keys (ASCII)
+#define UP 56        // NUMPAD 8
+#define DOWN 50      // NUMPAD 2
+#define LEFT 52      // NUMPAD 4
+#define RIGHT 54     // NUMPAD 6
+#define ENTER 53     // NUMPAD 5
+#define BACK 55      // NUMPAD 7
+#define BACKSPACE 8  // BACKSPACE
+#define CLEAR 46     // NUMPAD .
+
+// Declare the call back function
+void inputCallback(char* value);
+
+MAIN_MENU(
+    ITEM_INPUT("Con", inputCallback), 
+    ITEM_BASIC("Connect to WiFi"),
+    ITEM_BASIC("Blink SOS"), 
+    ITEM_BASIC("Blink random")
+);
+
+LcdMenu menu(LCD_ROWS, LCD_COLS);
+
+void setup() {
+    Serial.begin(9600);
+    menu.setupLcdWithMenu(0x27, mainMenu);
+}
+
+void loop() {
+    if (!Serial.available()) return;
+    char command = Serial.read();
+
+    if (command == UP)
+        menu.up();
+    else if (command == DOWN)
+        menu.down();
+    else if (command == LEFT)
+        menu.left();
+    else if (command == RIGHT)
+        menu.right();
+    else if (command == ENTER)  // Press enter to go to edit mode
+        menu.enter();
+    else if (command == BACK)
+        menu.back();
+    else if (command == CLEAR)
+        menu.clear();
+    else if (command == BACKSPACE)  // Remove one character from tail
+        menu.backspace();
+    else  // Type the character you want
+        menu.type(command);
+}
+/**
+ * Define callback
+ */
+void inputCallback(char* value) {
+    Serial.print(F("# "));
+    Serial.println(value);
+}
